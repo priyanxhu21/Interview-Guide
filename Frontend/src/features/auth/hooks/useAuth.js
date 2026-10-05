@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../auth.context";
+import { AuthContext } from "../auth.context.js";
 import { login, register, logout } from "../services/auth.api";
 import { getErrorMessage } from "../../../lib/api";
 

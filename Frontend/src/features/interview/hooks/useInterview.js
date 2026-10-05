@@ -5,7 +5,7 @@ import {
     generateResumePdf as generateResumePdfRequest
 } from "../services/interview.api"
 import { useContext, useEffect } from "react"
-import { InterviewContext } from "../interview.context"
+import { InterviewContext } from "../interview.context.js"
 import { useParams } from "react-router"
 import { getErrorMessage } from "../../../lib/api"
 

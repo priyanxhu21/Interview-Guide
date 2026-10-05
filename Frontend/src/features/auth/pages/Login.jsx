@@ -20,7 +20,8 @@ const Login = () => {
             if (user) {
                 navigate('/')
             }
-        } catch {
+        } catch (error) {
+            void error
         }
     }
 

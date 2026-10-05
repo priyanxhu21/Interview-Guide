@@ -21,7 +21,8 @@ const Register = () => {
             if (user) {
                 navigate("/")
             }
-        } catch {
+        } catch (error) {
+            void error
         }
     }
 

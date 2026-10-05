@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
             } catch {
                 if (isMounted) {
                     setUser(null)
+                    localStorage.removeItem("token")
                 }
             } finally {
                 if (isMounted) {

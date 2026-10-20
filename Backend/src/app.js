@@ -4,10 +4,14 @@ const cors = require("cors")
 
 const app = express()
 
+app.set("trust proxy", 1)
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+        return callback(null, true)
+    },
     credentials: true
 }))
 

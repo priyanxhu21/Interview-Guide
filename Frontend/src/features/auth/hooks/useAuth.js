@@ -20,9 +20,13 @@ export const useAuth = () => {
         setError("")
         try {
             const data = await login({ email, password })
+            if (data?.token) {
+                localStorage.setItem("token", data.token)
+            }
             setUser(data.user)
             return data.user
         } catch (err) {
+            localStorage.removeItem("token")
             const message = getErrorMessage(err, "Login failed.")
             setUser(null)
             setError(message)
@@ -37,9 +41,13 @@ export const useAuth = () => {
         setError("")
         try {
             const data = await register({ username, email, password })
+            if (data?.token) {
+                localStorage.setItem("token", data.token)
+            }
             setUser(data.user)
             return data.user
         } catch (err) {
+            localStorage.removeItem("token")
             const message = getErrorMessage(err, "Registration failed.")
             setUser(null)
             setError(message)
@@ -61,6 +69,7 @@ export const useAuth = () => {
             setError(message)
             throw new Error(message)
         } finally {
+            localStorage.removeItem("token")
             setLoading(false)
         }
     }

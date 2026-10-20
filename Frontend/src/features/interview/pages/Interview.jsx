@@ -3,12 +3,38 @@ import '../style/interview.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useParams, Link } from 'react-router'
 
-
-
 const NAV_ITEMS = [
-    { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
-    { id: 'behavioral', label: 'Behavioral Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>) },
-    { id: 'roadmap', label: 'Road Map', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11" /></svg>) },
+    {
+        id: 'technical',
+        label: 'Technical Questions',
+        shortLabel: 'Technical',
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+            </svg>
+        )
+    },
+    {
+        id: 'behavioral',
+        label: 'Behavioral Questions',
+        shortLabel: 'Behavioral',
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+        )
+    },
+    {
+        id: 'roadmap',
+        label: 'Preparation Road Map',
+        shortLabel: 'Road Map',
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11" />
+            </svg>
+        )
+    },
 ]
 
 const QuestionCard = ({ item, index }) => {
@@ -90,37 +116,85 @@ const Interview = () => {
         report.matchScore >= 80 ? 'score--high' :
             report.matchScore >= 60 ? 'score--mid' : 'score--low'
 
+    const activeItem = NAV_ITEMS.find(item => item.id === activeNav) || NAV_ITEMS[0]
+
+    const getCountBadge = (id) => {
+        if (!report) return null
+        if (id === 'technical') return `${report.technicalQuestions?.length || 0}`
+        if (id === 'behavioral') return `${report.behavioralQuestions?.length || 0}`
+        if (id === 'roadmap') return `${report.preparationPlan?.length || 0}d`
+        return null
+    }
 
     return (
         <div className='interview-page'>
             <div className='interview-layout'>
 
-                <nav className='interview-nav'>
+                <nav className='interview-nav' aria-label="Interview Navigation">
                     <div className="nav-content">
                         <div className="interview-nav__header">
                             <Link to="/" className="interview-nav__back" title="Back to Home">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
                                 <span>Home</span>
                             </Link>
-                            <p className='interview-nav__label'>Sections</p>
+                            <span className='interview-nav__label'>Sections</span>
                         </div>
-                        <div className="interview-nav__items">
+
+                        {/* Dropdown Selector (Especially helpful on mobile & tablet) */}
+                        <div className="interview-nav__dropdown-wrap">
+                            <label htmlFor="interview-section-select" className="visually-hidden">
+                                Select interview section
+                            </label>
+                            <div className="interview-nav__select-box">
+                                <span className="interview-nav__select-icon" aria-hidden="true">
+                                    {activeItem.icon}
+                                </span>
+                                <select
+                                    id="interview-section-select"
+                                    className="interview-nav__select"
+                                    value={activeNav}
+                                    onChange={(e) => setActiveNav(e.target.value)}
+                                    aria-label="Select interview section"
+                                >
+                                    {NAV_ITEMS.map(item => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.label} {getCountBadge(item.id) ? `(${getCountBadge(item.id)})` : ''}
+                                        </option>
+                                    ))}
+                                </select>
+                                <span className="interview-nav__select-chevron" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Segmented Tabs (Desktop vertical sidebar / Mobile horizontal tab bar) */}
+                        <div className="interview-nav__items" role="tablist" aria-label="Interview Sections">
                             {NAV_ITEMS.map(item => (
                                 <button
                                     key={item.id}
+                                    role="tab"
+                                    aria-selected={activeNav === item.id}
                                     className={`interview-nav__item ${activeNav === item.id ? 'interview-nav__item--active' : ''}`}
                                     onClick={() => setActiveNav(item.id)}
                                 >
                                     <span className='interview-nav__icon'>{item.icon}</span>
-                                    <span>{item.label}</span>
+                                    <span className='interview-nav__label-full'>{item.label}</span>
+                                    <span className='interview-nav__label-short'>{item.shortLabel}</span>
+                                    {getCountBadge(item.id) && (
+                                        <span className='interview-nav__badge'>{getCountBadge(item.id)}</span>
+                                    )}
                                 </button>
                             ))}
                         </div>
                     </div>
+
                     <button
                         onClick={handleDownloadResume}
                         disabled={downloadingPdf}
-                        className='button primary-button interview-nav__download' >
+                        className='button primary-button interview-nav__download'
+                        title="Download ATS-tailored resume PDF"
+                    >
                         {downloadingPdf ? (
                             <span>Generating PDF...</span>
                         ) : (

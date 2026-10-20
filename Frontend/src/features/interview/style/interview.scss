@@ -20,6 +20,18 @@ $severity-low: #3fb950;
     display: none;
 }
 
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 // ── Page Shell ────────────────────────────────────────────────────────────────
 .interview-page {
     width: 100%;
@@ -130,6 +142,83 @@ $severity-low: #3fb950;
         margin-bottom: 0.25rem;
     }
 
+    &__dropdown-wrap {
+        display: none;
+        width: 100%;
+        margin-bottom: 0.35rem;
+    }
+
+    &__select-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        background-color: $bg-panel;
+        border: 1px solid $border-color;
+        border-radius: 0.5rem;
+        padding: 0 0.75rem;
+        height: 42px;
+        box-sizing: border-box;
+        transition: border-color 0.15s, box-shadow 0.15s;
+
+        &:focus-within {
+            border-color: $accent;
+            box-shadow: 0 0 0 2px rgba($accent, 0.25);
+        }
+    }
+
+    &__select-icon {
+        display: flex;
+        align-items: center;
+        color: $accent;
+        margin-right: 0.6rem;
+        flex-shrink: 0;
+        pointer-events: none;
+
+        svg {
+            stroke: $accent;
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    &__select {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: $text-primary;
+        font-family: $font-stack;
+        font-size: 0.875rem;
+        font-weight: 500;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        padding-right: 1.75rem;
+
+        option {
+            background-color: $bg-card;
+            color: $text-primary;
+            padding: 0.5rem;
+        }
+    }
+
+    &__select-chevron {
+        position: absolute;
+        right: 0.75rem;
+        pointer-events: none;
+        color: $text-muted;
+        display: flex;
+        align-items: center;
+
+        svg {
+            stroke: $text-muted;
+            width: 16px;
+            height: 16px;
+        }
+    }
+
     &__items {
         display: flex;
         flex-direction: column;
@@ -164,7 +253,30 @@ $severity-low: #3fb950;
             .interview-nav__icon svg {
                 stroke: $accent;
             }
+
+            .interview-nav__badge {
+                background-color: rgba($accent, 0.2);
+                color: $accent;
+            }
         }
+    }
+
+    &__label-full {
+        display: inline;
+    }
+
+    &__label-short {
+        display: none;
+    }
+
+    &__badge {
+        margin-left: auto;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.12rem 0.45rem;
+        border-radius: 999px;
+        background-color: rgba(255, 255, 255, 0.08);
+        color: $text-muted;
     }
 
     &__icon {
@@ -640,33 +752,60 @@ $severity-low: #3fb950;
         &__label {
             padding: 0;
             margin-bottom: 0;
+            display: none;
+        }
+
+        &__dropdown-wrap {
+            display: block;
         }
 
         &__items {
+            display: flex;
             flex-direction: row;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 0.35rem;
+            width: 100%;
             gap: 0.5rem;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
+            overflow-x: visible;
+            padding-bottom: 0;
         }
 
         &__item {
             white-space: nowrap;
-            flex: 1 0 auto;
+            width: auto;
+            flex: 1 1 0px;
+            min-width: 0;
             justify-content: center;
-            padding: 0.55rem 0.85rem;
-            border: 1px solid rgba($border-color, 0.5);
-            background-color: rgba($bg-panel, 0.4);
+            padding: 0.55rem 0.5rem;
+            font-size: 0.8rem;
+            border: 1px solid rgba($border-color, 0.7);
+            background-color: rgba($bg-panel, 0.5);
 
             &--active {
-                border-color: rgba($accent, 0.3);
-                background-color: rgba($accent, 0.12);
+                border-color: rgba($accent, 0.6);
+                background-color: rgba($accent, 0.15);
+                color: #fff;
+
+                .interview-nav__badge {
+                    background-color: rgba($accent, 0.25);
+                    color: $accent;
+                }
             }
+        }
+
+        &__label-full {
+            display: none;
+        }
+
+        &__label-short {
+            display: inline;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &__badge {
+            margin-left: 0.2rem;
+            font-size: 0.68rem;
+            padding: 0.08rem 0.3rem;
         }
 
         &__download {
@@ -734,17 +873,39 @@ $severity-low: #3fb950;
 
     .interview-nav {
         padding: 0.75rem;
-        gap: 0.65rem;
+        gap: 0.6rem;
+
+        &__select-box {
+            height: 38px;
+            padding: 0 0.65rem;
+        }
+
+        &__select {
+            font-size: 0.825rem;
+        }
+
+        &__items {
+            gap: 0.35rem;
+        }
 
         &__item {
-            font-size: 0.8rem;
-            padding: 0.5rem 0.65rem;
-            gap: 0.4rem;
+            font-size: 0.75rem;
+            padding: 0.45rem 0.2rem;
+            gap: 0.25rem;
+
+            svg {
+                width: 13px;
+                height: 13px;
+            }
+        }
+
+        &__badge {
+            display: none;
         }
 
         &__download {
             font-size: 0.825rem;
-            padding: 0.65rem 0.85rem;
+            padding: 0.6rem 0.75rem;
         }
     }
 

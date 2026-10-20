@@ -8,7 +8,10 @@ main{
 
 
     .form-container{
-        min-width: 350px;
+        width: 100%;
+        max-width: 400px;
+        min-width: 0;
+        padding: clamp(1rem, 5vw, 2rem);
 
         display: flex;
         flex-direction: column;

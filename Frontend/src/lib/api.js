@@ -1,21 +1,10 @@
 import axios from "axios"
 
-let rawURL = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").replace(/\/$/, "")
-if (!rawURL.endsWith("/api")) {
-    rawURL += "/api"
-}
+const baseURL = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").replace(/\/$/, "")
 
 export const api = axios.create({
-    baseURL: rawURL,
+    baseURL,
     withCredentials: true,
-})
-
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token")
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
 })
 
 export function getErrorMessage(error, fallbackMessage) {
